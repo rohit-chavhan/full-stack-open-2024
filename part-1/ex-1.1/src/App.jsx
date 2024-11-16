@@ -5,7 +5,7 @@ function Header(prop) {
 function Content(prop) {
   return (
     <p>
-      {prop.part} {prop.exercises1}
+      {prop.part} {prop.exercise}
     </p>
   );
 }
