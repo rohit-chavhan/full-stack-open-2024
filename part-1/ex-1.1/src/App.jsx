@@ -1,52 +1,66 @@
-function Header(prop) {
+const Header = (prop) => {
   return <h1>{prop.course}</h1>;
-}
+};
 
-function Part(prop) {
+const Part = (prop) => {
+  console.log(prop);
   return (
     <p>
-      {prop.part} {prop.exercise}
+      {prop.part} {prop.ex}
     </p>
   );
-}
+};
 
-function Content(prop) {
+const Content = (prop) => {
+  console.log(prop);
   return (
     <div>
-      <Part part={prop.part1} exercise={prop.exercise1} />
-      <Part part={prop.part2} exercise={prop.exercise2} />
-      <Part part={prop.part3} exercise={prop.exercise3} />
+      <Part part={prop.part1} ex={prop.ex1} />
+      <Part part={prop.part2} ex={prop.ex2} />
+      <Part part={prop.part3} ex={prop.ex3} />
     </div>
   );
-}
+};
 
-function Total(prop) {
+const Total = (prop) => {
+  console.log(prop);
   return <p>Number of exercises {prop.one + prop.two + prop.three}</p>;
-}
+};
 
 const App = () => {
   const course = 'Half Stack application development';
-  const part1 = 'Fundamentals of React';
-  const exercises1 = 10;
-  const part2 = 'Using props to pass data';
-  const exercises2 = 7;
-  const part3 = 'State of a component';
-  const exercises3 = 14;
+
+  const part1 = {
+    name: 'Fundamentals of React',
+    exercises: 10,
+  };
+  const part2 = {
+    name: 'Using props to pass data',
+    exercises: 7,
+  };
+  const part3 = {
+    name: 'State of a component',
+    exercises: 14,
+  };
 
   return (
     <div>
       <Header course={course} />
 
       <Content
-        part1={part1}
-        part2={part2}
-        part3={part3}
-        exercise1={exercises1}
-        exercise2={exercises2}
-        exercise3={exercises3}
+        part1={part1.name}
+        ex1={part1.exercises}
+        ex2={part2.exercises}
+        ex3={part3.exercises}
+        part2={part2.name}
+        part3={part3.name}
       />
 
-      <Total one={exercises1} two={exercises2} three={exercises3} />
+      <Total
+        one={part1.exercises}
+        two={part2.exercises}
+        three={part3.exercises}
+      />
     </div>
   );
 };
