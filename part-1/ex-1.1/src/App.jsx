@@ -1,65 +1,39 @@
-const Header = (prop) => {
-  return <h1>{prop.course}</h1>;
-};
+import { useState } from 'react';
 
-const Part = (prop) => {
-  console.log(prop);
-  return (
-    <p>
-      {prop.part} {prop.ex}
-    </p>
-  );
-};
-
-const Content = (prop) => {
-  console.log(prop.prop[0]);
-  return (
-    <div>
-      <Part part={prop.prop[0].name} ex={prop.prop[0].exercises} />
-      <Part part={prop.prop[1].name} ex={prop.prop[1].exercises} />
-      <Part part={prop.prop[2].name} ex={prop.prop[2].exercises} />
-    </div>
-  );
-};
-
-const Total = (prop) => {
-  console.log(prop);
-  return (
-    <p>
-      Number of exercises{' '}
-      {prop.total[0].exercises +
-        prop.total[1].exercises +
-        prop.total[2].exercises}
-    </p>
-  );
-};
+const Button = (prop) => <button onClick={prop.atClick}>{prop.value}</button>;
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10,
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7,
-      },
-      {
-        name: 'State of a component',
-        exercises: 14,
-      },
-    ],
-  };
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  let feedsRay = ['good', 'neutral', 'bad'];
 
   return (
     <div>
-      <Header course={course.name} />
-
-      <Content prop={course.parts} />
-
-      <Total total={course.parts} />
+      <h1>feedback</h1>
+      <Button
+        value={feedsRay[0]}
+        atClick={() => {
+          setGood(good + 1);
+        }}
+      />
+      <Button
+        value={feedsRay[1]}
+        atClick={() => {
+          setNeutral(neutral + 1);
+        }}
+      />
+      <Button
+        value={feedsRay[2]}
+        atClick={() => {
+          setBad(bad + 1);
+        }}
+      />
+      <h2>statistics</h2>
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
     </div>
   );
 };
