@@ -1,103 +1,29 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
 
-const Button = (prop) => <button onClick={prop.atClick}>{prop.value}</button>;
-
-const StatisticLine = ({
-  Titles,
-  total,
-  reviews,
-  doMathFunc,
-  logicMathNames,
-}) => {
-  console;
-  if (total > 0) {
-    return (
-      <>
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>{Titles[0]}</td>
-                <td>{reviews[0]}</td>
-              </tr>
-              <tr>
-                <td>{Titles[1]}</td>
-                <td>{reviews[1]}</td>
-              </tr>
-              <tr>
-                <td>{Titles[2]}</td>
-                <td>{reviews[2]}</td>
-              </tr>
-              <tr>
-                <td>{logicMathNames[0]}:</td>
-                <td>{doMathFunc[0]().toFixed(1)}</td>
-              </tr>
-              <tr>
-                <td>{logicMathNames[1]}:</td>
-                <td>{doMathFunc[1]().toFixed(1)} </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </>
-    );
-  }
-  return <p>No feedback given</p>;
-};
-
 const App = () => {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-  const [total, setTotal] = useState(0);
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.',
+  ];
 
-  const calcAverage = () => {
-    let neutx = good - bad;
-    return neutx / total;
+  const [selected, setSelected] = useState(0);
+
+  const randomFunc = () => {
+    const getRandomNum = () => Math.floor(Math.random() * 8);
+    let x = getRandomNum();
+    setSelected(x);
   };
-
-  const calcPositive = () => {
-    let x = good / total;
-    return x * 100;
-  };
-
-  let feedsRay = ['good', 'neutral', 'bad'];
-  let statRay = ['average', 'positive'];
-  let calcFunctions = [calcAverage, calcPositive];
 
   return (
     <div>
-      <h1>feedback</h1>
-      <Button
-        value={feedsRay[0]}
-        atClick={() => {
-          setGood(good + 1);
-          setTotal(total + 1);
-        }}
-      />
-      <Button
-        value={feedsRay[1]}
-        atClick={() => {
-          setNeutral(neutral + 1);
-          setTotal(total + 1);
-        }}
-      />
-      <Button
-        value={feedsRay[2]}
-        atClick={() => {
-          setBad(bad + 1);
-          setTotal(total + 1);
-        }}
-      />
-      <h2>statistics</h2>
-      <StatisticLine
-        Titles={feedsRay}
-        total={total}
-        reviews={[good, neutral, bad]}
-        doMathFunc={calcFunctions}
-        logicMathNames={statRay}
-      />
+      <p>{anecdotes[selected]}</p>
+      <button onClick={randomFunc}>next anecdotes</button>
     </div>
   );
 };
