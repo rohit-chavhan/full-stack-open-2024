@@ -13,17 +13,49 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [vote, setVote] = useState([
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+    { value: 0 },
+  ]);
 
-  const randomFunc = () => {
-    const getRandomNum = () => Math.floor(Math.random() * 8);
-    let x = getRandomNum();
-    setSelected(x);
+  const randomFunc = () => setSelected(Math.floor(Math.random() * 8));
+
+  const calciVotes = () => {
+    let x = vote.map((el, i) => {
+      return i === selected ? { value: el.value + 1 } : el;
+    });
+    setVote(x);
+  };
+
+  const getHighestVote = () => {
+    let shallowRay = [...vote];
+    let red = shallowRay.sort((x, y) => y.value - x.value);
+
+    let inde = 0;
+    vote.filter((el, i) => {
+      if (el.value === red[0].value) {
+        inde = i;
+        return el;
+      }
+    });
+
+    setSelected(inde);
   };
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <p>has {vote[selected].value} votes</p>
+
       <button onClick={randomFunc}>next anecdotes</button>
+      <button onClick={calciVotes}>vote</button>
+      <button onClick={getHighestVote}>get highest vote anecdotes</button>
     </div>
   );
 };
