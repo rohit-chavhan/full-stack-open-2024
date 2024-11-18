@@ -2,6 +2,13 @@ import { useState } from 'react';
 
 const Button = (prop) => <button onClick={prop.atClick}>{prop.value}</button>;
 
+// eslint-disable-next-line react/prop-types
+const Stats = ({ text, total, calc, sym }) => (
+  <p>
+    {text}: {total > 0 ? calc().toFixed(12) : 0} {sym}
+  </p>
+);
+
 const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
@@ -12,7 +19,7 @@ const App = () => {
 
   const calcPositive = () => {
     let x = good / total;
-    return x;
+    return x * 100;
   };
 
   const calcAverage = () => {
@@ -49,8 +56,9 @@ const App = () => {
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
       <p>total {total} </p>
-      <p>average: {total > 0 ? calcAverage().toFixed(12) : 0} </p>
-      <p>positive: {total > 0 ? `${calcPositive().toFixed(12)} %` : 0} </p>
+
+      <Stats text={'average'} total={total} calc={calcAverage} sym={''} />
+      <Stats text={'positive'} total={total} calc={calcPositive} sym={'%'} />
     </div>
   );
 };
