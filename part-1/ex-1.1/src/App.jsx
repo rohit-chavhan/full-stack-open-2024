@@ -14,8 +14,7 @@ const Stats = ({ text, total, calc, sym }) => {
 };
 
 // eslint-disable-next-line react/prop-types
-const StatTitles = ({ Titles, total, reviews }) => {
-  console.log(total);
+const StatisticLine = ({ Titles, total, reviews }) => {
   if (total > 0) {
     return (
       <>
@@ -83,7 +82,7 @@ const App = () => {
         <h2>statistics</h2>
       </div>
 
-      <StatTitles
+      <StatisticLine
         Titles={feedsRay}
         total={total}
         reviews={[good, neutral, bad]}
