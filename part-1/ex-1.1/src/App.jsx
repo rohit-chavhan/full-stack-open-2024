@@ -3,11 +3,38 @@ import { useState } from 'react';
 const Button = (prop) => <button onClick={prop.atClick}>{prop.value}</button>;
 
 // eslint-disable-next-line react/prop-types
-const Stats = ({ text, total, calc, sym }) => (
-  <p>
-    {text}: {total > 0 ? calc().toFixed(12) : 0} {sym}
-  </p>
-);
+const Stats = ({ text, total, calc, sym }) => {
+  if (total > 0) {
+    return (
+      <p>
+        {text}: {total > 0 ? calc().toFixed(12) : 0} {sym}
+      </p>
+    );
+  }
+};
+
+// eslint-disable-next-line react/prop-types
+const StatTitles = ({ Titles, total, reviews }) => {
+  console.log(total);
+  if (total > 0) {
+    return (
+      <>
+        <p>
+          {Titles[0]} {reviews[0]}
+        </p>
+        <p>
+          {Titles[1]}
+          {reviews[1]}
+        </p>
+        <p>
+          {Titles[2]}
+          {reviews[2]}
+        </p>
+      </>
+    );
+  }
+  return <p>No feedback given</p>;
+};
 
 const App = () => {
   const [good, setGood] = useState(0);
@@ -16,6 +43,7 @@ const App = () => {
   const [total, setTotal] = useState(0);
 
   let feedsRay = ['good', 'neutral', 'bad'];
+  let statRay = ['average', 'positive'];
 
   const calcPositive = () => {
     let x = good / total;
@@ -29,36 +57,40 @@ const App = () => {
 
   return (
     <div>
-      <h1>feedback</h1>
-      <Button
-        value={feedsRay[0]}
-        atClick={() => {
-          setGood(good + 1);
-          setTotal(total + 1);
-        }}
-      />
-      <Button
-        value={feedsRay[1]}
-        atClick={() => {
-          setNeutral(neutral + 1);
-          setTotal(total + 1);
-        }}
-      />
-      <Button
-        value={feedsRay[2]}
-        atClick={() => {
-          setBad(bad + 1);
-          setTotal(total + 1);
-        }}
-      />
-      <h2>statistics</h2>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>total {total} </p>
+      <div>
+        <h1>feedback</h1>
+        <Button
+          value={feedsRay[0]}
+          atClick={() => {
+            setGood(good + 1);
+            setTotal(total + 1);
+          }}
+        />
+        <Button
+          value={feedsRay[1]}
+          atClick={() => {
+            setNeutral(neutral + 1);
+            setTotal(total + 1);
+          }}
+        />
+        <Button
+          value={feedsRay[2]}
+          atClick={() => {
+            setBad(bad + 1);
+            setTotal(total + 1);
+          }}
+        />
+        <h2>statistics</h2>
+      </div>
 
-      <Stats text={'average'} total={total} calc={calcAverage} sym={''} />
-      <Stats text={'positive'} total={total} calc={calcPositive} sym={'%'} />
+      <StatTitles
+        Titles={feedsRay}
+        total={total}
+        reviews={[good, neutral, bad]}
+      />
+
+      <Stats text={statRay[0]} total={total} calc={calcAverage} sym={''} />
+      <Stats text={statRay[1]} total={total} calc={calcPositive} sym={'%'} />
     </div>
   );
 };
