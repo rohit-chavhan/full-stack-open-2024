@@ -19,8 +19,16 @@ const App = () => {
   const addElement = (event) => {
     event.preventDefault();
     const newObj = { name: newName };
-    setPersons(persons.concat(newObj));
-    setNewName('');
+    let getBoolean = persons.some(
+      (el) => JSON.stringify(el) === JSON.stringify(newObj)
+    );
+
+    if (getBoolean) {
+      alert(`${newObj.name} already added to phonebook`);
+    } else {
+      setPersons(persons.concat(newObj));
+      setNewName('');
+    }
   };
 
   return (
@@ -43,3 +51,7 @@ const App = () => {
 };
 
 export default App;
+
+/*
+
+*/
