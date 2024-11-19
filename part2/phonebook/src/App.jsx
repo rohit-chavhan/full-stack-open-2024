@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Lists from './components/Lists';
+import Form from './components/Forms';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -9,14 +10,15 @@ const App = () => {
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
   ]);
 
-  const [newName, setNewName] = useState('');
-  const [newNum, setNewNum] = useState('');
+  const [newPerson, setNewPerson] = useState({ name: '', number: '' });
 
   const [search, setSearch] = useState('');
   const [find, setFind] = useState([]);
 
-  const updateName = (event) => setNewName(event.target.value);
-  const updateNums = (event) => setNewNum(event.target.value);
+  const updateName = (event) =>
+    setNewPerson({ name: event.target.value, number: newPerson.number });
+  const updateNums = (event) =>
+    setNewPerson({ name: newPerson.name, number: event.target.value });
 
   const searchFilter = (event) => {
     let newSearch = event.target.value;
@@ -36,8 +38,8 @@ const App = () => {
     event.preventDefault();
 
     const newObj = {
-      name: newName,
-      number: newNum,
+      name: newPerson.name,
+      number: newPerson.number,
       id: String(persons.length + 1),
     };
 
@@ -49,25 +51,30 @@ const App = () => {
       alert(`${newObj.name} already added to phonebook`);
     } else {
       setPersons(persons.concat(newObj));
-      setNewName('');
-      setNewNum('');
+      setNewPerson({ name: '', number: '' });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with: <input onChange={searchFilter} value={search} />
-      </div>
+
+      <Form
+        title={'filter shown with: '}
+        cliFunc={searchFilter}
+        value={search}
+      />
+
       <Lists obj={find} />
       <form>
-        <div>
-          name: <input onChange={updateName} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={updateNums} value={newNum} />
-        </div>
+        <Form title={'name: '} cliFunc={updateName} value={newPerson.name} />
+
+        <Form
+          title={'number: '}
+          cliFunc={updateNums}
+          value={newPerson.number}
+        />
+
         <div>
           <button onClick={addElement} type="submit">
             add
