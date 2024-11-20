@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Lists from './components/Lists';
 import Form from './components/Forms';
+import findEqualEl from './useSearchFilter';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -23,15 +24,9 @@ const App = () => {
   const searchFilter = (event) => {
     let newSearch = event.target.value;
     setSearch(newSearch);
-    let findEqualEl = persons.filter(
-      (el) => el.name.toLowerCase() === newSearch.toLowerCase()
-    );
 
-    if (findEqualEl.length >= 1) {
-      setFind(findEqualEl);
-    } else {
-      setFind([]);
-    }
+    const filteredPersons = findEqualEl(persons, newSearch);
+    return setFind(filteredPersons);
   };
 
   const addElement = (event) => {
@@ -44,7 +39,7 @@ const App = () => {
     };
 
     let getBoolean = persons.some(
-      (el) => JSON.stringify(el) === JSON.stringify(newObj)
+      (el) => JSON.stringify(el.name) === JSON.stringify(newObj.name)
     );
 
     if (getBoolean) {
@@ -64,8 +59,8 @@ const App = () => {
         cliFunc={searchFilter}
         value={search}
       />
-
       <Lists obj={find} />
+      <h3>Add a new</h3>
       <form>
         <Form title={'name: '} cliFunc={updateName} value={newPerson.name} />
 
