@@ -3,14 +3,15 @@ import Lists from './components/Lists';
 import Form from './components/Forms';
 import findEqualEl from './useSearchFilter';
 import backendCalls from './services/backendCalls';
+import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
 
   const [newPerson, setNewPerson] = useState({ name: '', number: '' });
-
   const [search, setSearch] = useState('');
   const [find, setFind] = useState([]);
+  const [notification, setNotification] = useState(null);
 
   const hook = () => {
     backendCalls.getAll().then((data) => {
@@ -19,11 +20,13 @@ const App = () => {
   };
   useEffect(hook, []);
 
-  const updateName = (event) =>
+  const updateName = (event) => {
     setNewPerson({ name: event.target.value, number: newPerson.number });
+  };
 
-  const updateNums = (event) =>
+  const updateNums = (event) => {
     setNewPerson({ name: newPerson.name, number: event.target.value });
+  };
 
   let resetFormfields = () => setNewPerson({ name: '', number: '' });
 
@@ -46,6 +49,18 @@ const App = () => {
     resetFormfields();
   };
 
+  const stringForError = (msg) =>
+    `Information of ${msg} has already been removed from server`;
+
+  const handleNotification = (msg, value) => {
+    value === 'error'
+      ? setNotification(stringForError(msg))
+      : setNotification(`${value} ${msg}`);
+    setTimeout(() => {
+      setNotification(null);
+    }, 4000);
+  };
+
   const addElement = (event) => {
     event.preventDefault();
 
@@ -66,16 +81,23 @@ const App = () => {
         `${newObj.name} already added to phonebook`
       );
       userBolvalue ? usingPut(findContact[0], newObj) : null;
+      handleNotification(newObj.name, 'Updated');
     } else {
       backendCalls.create(newObj).then((response) => {
         setPersons(persons.concat(response));
         resetFormfields();
       });
+      handleNotification(newObj.name, 'Added');
     }
   };
 
   const deleteCalls = (id) => {
-    backendCalls.deleteContact(id);
+    const request = backendCalls.deleteContact(id);
+    request.catch((res) => {
+      let el = persons.filter((el) => el.id === id);
+      handleNotification(el[0].name, 'error');
+    });
+
     let newRay = persons.filter((el) => el.id !== id);
     setPersons(newRay);
   };
@@ -88,6 +110,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification msg={notification} />
 
       <Form
         title={'filter shown with: '}
