@@ -7,7 +7,6 @@ import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-
   const [newPerson, setNewPerson] = useState({ name: '', number: '' });
   const [search, setSearch] = useState('');
   const [find, setFind] = useState([]);
@@ -20,12 +19,15 @@ const App = () => {
   };
   useEffect(hook, []);
 
-  const updateName = (event) => {
-    setNewPerson({ name: event.target.value, number: newPerson.number });
-  };
+  const formFields = (event) => {
+    const {
+      value,
+      dataset: { form },
+    } = event.target;
 
-  const updateNums = (event) => {
-    setNewPerson({ name: newPerson.name, number: event.target.value });
+    form === 'name'
+      ? setNewPerson({ name: value, number: newPerson.number })
+      : setNewPerson({ name: newPerson.name, number: value });
   };
 
   let resetFormfields = () => setNewPerson({ name: '', number: '' });
@@ -121,12 +123,18 @@ const App = () => {
       <Lists obj={find} />
       <h3>Add a new</h3>
       <form>
-        <Form title={'name: '} cliFunc={updateName} value={newPerson.name} />
+        <Form
+          title={'name: '}
+          cliFunc={formFields}
+          value={newPerson.name}
+          data={'name'}
+        />
 
         <Form
           title={'number: '}
-          cliFunc={updateNums}
+          cliFunc={formFields}
           value={newPerson.number}
+          data={'num'}
         />
 
         <div>

@@ -1,6 +1,6 @@
-const Form = ({ title, cliFunc, value }) => (
+const Form = ({ title, cliFunc, value, data }) => (
   <div>
-    {title} <input onChange={cliFunc} value={value} />
+    {title} <input data-form={data} onChange={cliFunc} value={value} />
   </div>
 );
 
