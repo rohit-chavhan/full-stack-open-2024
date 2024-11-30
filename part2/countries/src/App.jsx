@@ -26,13 +26,13 @@ function App() {
     return (
       <div>
         <ul>
-          {ray.map((el, index) => (
-            <>
-              <li key={index}>{el}</li>
+          {ray.map((el, i) => (
+            <div key={i}>
+              <li>{el}</li>
               <button data-country={el} onClick={showCountry}>
                 show
               </button>
-            </>
+            </div>
           ))}
         </ul>
       </div>
@@ -66,7 +66,7 @@ function App() {
     if (obj === null) {
       return null;
     }
-    setCapital(obj.capital[0]);
+    setTimeout(() => setCapital(obj.capital[0]), 0);
   };
 
   const fetchWeather = () => {
