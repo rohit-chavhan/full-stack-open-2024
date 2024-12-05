@@ -1,113 +1,114 @@
-import { useEffect, useState } from 'react';
-import Lists from './components/Lists';
-import Form from './components/Forms';
-import findEqualEl from './useSearchFilter';
-import backendCalls from './services/backendCalls';
-import Notification from './components/Notification';
+import { useEffect, useState } from 'react'
+import Lists from './components/Lists'
+import Form from './components/Forms'
+import findEqualEl from './useSearchFilter'
+import backendCalls from './services/backendCalls'
+import Notification from './components/Notification'
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [newPerson, setNewPerson] = useState({ name: '', number: '' });
-  const [search, setSearch] = useState('');
-  const [find, setFind] = useState([]);
-  const [notification, setNotification] = useState(null);
+  const [persons, setPersons] = useState([])
+  const [newPerson, setNewPerson] = useState({ name: '', number: '' })
+  const [search, setSearch] = useState('')
+  const [find, setFind] = useState([])
+  const [notification, setNotification] = useState(null)
 
   const hook = () => {
     backendCalls.getAll().then((data) => {
-      return setPersons(data);
-    });
-  };
-  useEffect(hook, []);
+      return setPersons(data)
+    })
+  }
+  useEffect(hook, [])
 
   const formFields = (event) => {
     const {
       value,
       dataset: { form },
-    } = event.target;
+    } = event.target
 
     form === 'name'
       ? setNewPerson({ name: value, number: newPerson.number })
-      : setNewPerson({ name: newPerson.name, number: value });
-  };
+      : setNewPerson({ name: newPerson.name, number: value })
+  }
 
-  let resetFormfields = () => setNewPerson({ name: '', number: '' });
+  let resetFormfields = () => setNewPerson({ name: '', number: '' })
 
   const searchFilter = (event) => {
-    let newSearch = event.target.value;
-    setSearch(newSearch);
+    let newSearch = event.target.value
+    setSearch(newSearch)
 
-    const filteredPersons = findEqualEl(persons, newSearch);
-    return setFind(filteredPersons);
-  };
+    const filteredPersons = findEqualEl(persons, newSearch)
+    return setFind(filteredPersons)
+  }
 
   const usingPut = (old, newOb) => {
-    let changedContact = { ...old, number: newOb.number };
+    let changedContact = { ...old, number: newOb.number }
 
     backendCalls
       .updateContact(changedContact)
       .then((response) =>
         setPersons(persons.map((n) => (n.id === response.id ? response : n)))
-      );
-    resetFormfields();
-  };
+      )
+    resetFormfields()
+  }
 
   const stringForError = (msg) =>
-    `Information of ${msg} has already been removed from server`;
+    `Information of ${msg} has already been removed from server`
 
   const handleNotification = (msg, value) => {
     value === 'error'
       ? setNotification(stringForError(msg))
-      : setNotification(`${value} ${msg}`);
+      : setNotification(`${value} ${msg}`)
     setTimeout(() => {
-      setNotification(null);
-    }, 4000);
-  };
+      setNotification(null)
+    }, 4000)
+  }
 
   const addElement = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     const newObj = {
       id: String(persons.length + 1),
       name: newPerson.name,
       number: newPerson.number,
-    };
+    }
 
     let getBoolean = persons.some(
       (el) => JSON.stringify(el.name) === JSON.stringify(newObj.name)
-    );
+    )
 
     if (getBoolean) {
-      const findContact = persons.filter((el) => el.name === newObj.name);
+      const findContact = persons.filter((el) => el.name === newObj.name)
 
       let userBolvalue = window.confirm(
         `${newObj.name} already added to phonebook`
-      );
-      userBolvalue ? usingPut(findContact[0], newObj) : null;
-      handleNotification(newObj.name, 'Updated');
+      )
+      userBolvalue ? usingPut(findContact[0], newObj) : null
+      handleNotification(newObj.name, 'Updated')
     } else {
       backendCalls.create(newObj).then((response) => {
-        setPersons(persons.concat(response));
-        resetFormfields();
-      });
-      handleNotification(newObj.name, 'Added');
+        setPersons(persons.concat(response))
+        resetFormfields()
+      })
+      handleNotification(newObj.name, 'Added')
     }
-  };
+  }
 
   const deleteCalls = (id) => {
-    const request = backendCalls.deleteContact(id);
+    console.log(id)
+    const request = backendCalls.deleteContact(id)
     request.catch((res) => {
-      let el = persons.filter((el) => el.id === id);
-      handleNotification(el[0].name, 'error');
-    });
+      let el = persons.filter((el) => el.id === id)
+      handleNotification(el[0].name, 'error')
+    })
 
-    let newRay = persons.filter((el) => el.id !== id);
-    setPersons(newRay);
-  };
+    let newRay = persons.filter((el) => el.id !== id)
+    setPersons(newRay)
+  }
 
   const toDelete = (name, id) => {
-    let x = window.confirm(`Delete ${name}`);
-    x ? deleteCalls(id) : null;
-  };
+    let x = window.confirm(`Delete ${name}`)
+    x ? deleteCalls(id) : null
+  }
 
   return (
     <div>
@@ -146,7 +147,7 @@ const App = () => {
       <h2>Numbers</h2>
       <Lists obj={persons} delete={toDelete} />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
