@@ -7,24 +7,17 @@ const getStyle = (color) => {
     backgroundColor: 'lightgrey',
     color: color,
     marginBottom: 15,
-  };
-};
-
-const Notification = ({ msg }) => {
-  if (msg === null) {
-    return null;
   }
+}
 
-  let notiStyle = getStyle('green');
-  if (msg.includes('removed from server')) {
-    notiStyle = getStyle('red');
-  }
+const Notification = ({ msg, color }) => {
+  color = color === 'green' ? getStyle('green') : getStyle('red')
 
   return (
-    <div style={notiStyle}>
+    <div style={color}>
       <em>{msg}</em>
     </div>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

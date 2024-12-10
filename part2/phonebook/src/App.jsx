@@ -51,13 +51,9 @@ const App = () => {
     resetFormfields()
   }
 
-  const stringForError = (msg) =>
-    `Information of ${msg} has already been removed from server`
+  const handleNotification = (msg, color) => {
+    setNotification({ msg, color })
 
-  const handleNotification = (msg, value) => {
-    value === 'error'
-      ? setNotification(stringForError(msg))
-      : setNotification(`${value} ${msg}`)
     setTimeout(() => {
       setNotification(null)
     }, 4000)
@@ -83,13 +79,18 @@ const App = () => {
         `${newObj.name} already added to phonebook`
       )
       userBolvalue ? usingPut(findContact[0], newObj) : null
-      handleNotification(newObj.name, 'Updated')
+      handleNotification(newObj.name, 'green')
     } else {
-      backendCalls.create(newObj).then((response) => {
-        setPersons(persons.concat(response))
-        resetFormfields()
-      })
-      handleNotification(newObj.name, 'Added')
+      backendCalls
+        .create(newObj)
+        .then((response) => {
+          setPersons(persons.concat(response))
+          resetFormfields()
+          handleNotification(newObj.name, 'green')
+        })
+        .catch((err) => {
+          handleNotification(err.response.data.error, 'red')
+        })
     }
   }
 
@@ -98,7 +99,7 @@ const App = () => {
     const request = backendCalls.deleteContact(id)
     request.catch((res) => {
       let el = persons.filter((el) => el.id === id)
-      handleNotification(el[0].name, 'error')
+      handleNotification(el[0].name, 'red')
     })
 
     let newRay = persons.filter((el) => el.id !== id)
@@ -114,7 +115,9 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification msg={notification} />
+      {notification !== null && (
+        <Notification msg={notification.msg} color={notification.color} />
+      )}
 
       <Form
         title={'filter shown with: '}
