@@ -49,4 +49,6 @@ const blogs = [
   },
 ]
 
+console.log('red')
+
 module.exports = { blogs }
