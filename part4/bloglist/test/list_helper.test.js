@@ -5,6 +5,7 @@ const {
   totalLike,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 } = require('../utils/list_helper')
 const { blogs } = require('./blog')
 
@@ -37,7 +38,7 @@ describe('total likes', () => {
   })
 })
 
-describe('most likes', () => {
+describe('most liked', () => {
   test('most liked blog from a blog list', () => {
     assert.deepStrictEqual(favoriteBlog(blogs), {
       title: 'Canonical string reduction',
@@ -52,6 +53,15 @@ describe('most blogs', () => {
     assert.deepStrictEqual(mostBlogs(blogs), {
       author: 'Robert C. Martin',
       blogs: 3,
+    })
+  })
+})
+
+describe('most liked author from blog list', () => {
+  test('most liked author', () => {
+    assert.deepStrictEqual(mostLikes(blogs), {
+      author: 'Edsger W. Dijkstra',
+      likes: 17,
     })
   })
 })

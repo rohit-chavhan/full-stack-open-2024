@@ -1,5 +1,4 @@
 const _ = require('lodash')
-// const { blogs } = require('../test/blog')
 
 const dummy = (blogs) => 1
 
@@ -24,11 +23,40 @@ const mostBlogs = (blogs) => {
   let prop = Object.keys(x)
   let vals = Object.values(x)
 
-  const obj = {
-    author: prop[_.lastIndexOf(prop) - 1],
-    blogs: vals[_.lastIndexOf(prop) - 1],
-  }
-  return obj
+  return (obj = {
+    author: _.last(prop),
+    blogs: _.last(vals),
+  })
 }
 
-module.exports = { dummy, totalLike, favoriteBlog, mostBlogs }
+const mostLikes = (blogs) => {
+  const k = blogs.reduce((accu, cur) => {
+    if (Object.hasOwn(accu, cur.author)) {
+      accu[cur.author] += cur.likes
+      return accu
+    } else {
+      accu[cur.author] = cur.likes
+      return accu
+    }
+  }, {})
+
+  let value = 0
+  let objs = {}
+
+  for (let key in k) {
+    let vals = k[key]
+    if (vals > value) {
+      objs = { [key]: vals }
+      value = vals
+    }
+  }
+
+  let run = {}
+  for (const j in objs) {
+    run.author = j
+    run.likes = objs[j]
+  }
+  return run
+}
+
+module.exports = { dummy, totalLike, favoriteBlog, mostBlogs, mostLikes }
