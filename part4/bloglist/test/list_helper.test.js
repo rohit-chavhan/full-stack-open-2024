@@ -15,7 +15,7 @@ test('dummy return 1 ', () => {
 })
 
 describe('total likes', () => {
-  test('of empty list is zero', () => {
+  test.only('of empty list is zero', () => {
     assert.strictEqual(totalLike([]), 0)
   })
 
