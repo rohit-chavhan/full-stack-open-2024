@@ -1,5 +1,3 @@
-/*
- */
 const { test, after, describe, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
@@ -46,7 +44,7 @@ describe('adding a new blog', () => {
     likes: 12000,
   }
 
-  test.only('blog count increase by one', async () => {
+  test('blog count increase by one', async () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
@@ -55,11 +53,10 @@ describe('adding a new blog', () => {
 
     const blogCount = await api.get('/api/blogs')
     const x = await api.get('/api/blogs')
-    console.log(x.body)
     assert.strictEqual(blogCount.body.length, 2)
   })
 
-  test.only('added blog is returned in blog list', async () => {
+  test('added blog is returned in blog list', async () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
@@ -68,10 +65,68 @@ describe('adding a new blog', () => {
 
     const blogs = await api.get('/api/blogs')
     const blogList = await blogs.body.map((b) => b.title)
-    console.log('blogs.body ==> ', blogs.body)
-    console.log('blogList ==> ', blogList)
     assert(blogList.includes('new blog using ai'))
   })
+})
+
+test('like property default to 0', async () => {
+  const newBlog = {
+    title: 'no likes',
+    author: 'bansals in the house',
+    url: 'lenskart.com',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const res = await api.get('/api/blogs')
+  const noLikesBlog = res.body.find((blog) => blog.title === 'no likes')
+
+  assert(noLikesBlog.likes === 0)
+})
+
+test('without url blog is not added', async () => {
+  const newBlog = {
+    title: 'no url blog',
+    author: 'rohit',
+    likes: 34,
+  }
+
+  await api.post('/api/blogs').send(newBlog).expect(400)
+
+  const res = await api.get('/api/blogs')
+
+  assert(res.body.length === 1)
+})
+
+test('deleting a single blog', async () => {
+  const getId = await api.get('/api/blogs')
+  const Id = getId.body[0].id
+
+  await api.delete(`/api/blogs/${Id}`).expect(204)
+
+  const res = await api.get('/api/blogs')
+  assert(res.body.length === 0)
+})
+
+test('updating likes of blog', async () => {
+  const blog = {
+    likes: 500,
+  }
+
+  const getId = await api.get('/api/blogs')
+
+  const Id = getId.body[0].id
+
+  await api.put(`/api/blogs/${Id}`).send(blog)
+
+  const req = await api.get('/api/blogs')
+  const body = req.body[0]
+
+  assert(body.likes === blog.likes)
 })
 
 after(async () => {

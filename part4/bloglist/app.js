@@ -13,4 +13,13 @@ app.use(cors())
 const mongoUrl = MONGODB_URI
 mongoose.connect(mongoUrl)
 
+const errorHandler = (err, req, res, next) => {
+  if (err.name === 'ValidationError') {
+    return res.status(400).end()
+  }
+  return next(err)
+}
+
+app.use(errorHandler)
+
 module.exports = app
