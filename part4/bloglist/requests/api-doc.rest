@@ -1,0 +1,42 @@
+### Get All Users
+GET  http://localhost:3003/api/users
+
+### Adding New User
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "elon",
+    "name": "tesla",
+    "password": "spcaex"
+}
+
+### Login User
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "elon",
+    "password": "spcaex"
+}
+
+### Creating Blogs By User
+POST http://localhost:3003/api/localhost:3003/api/users
+Authorization: token_which_user_get_when_they_login
+Content-Type: application/json
+
+{
+    "title": "new space mission",
+    "author": "elon",
+    "likes": 12,
+    "url": "x.com",
+    "userId": "6768fd1e7a4456eb88ff55b1"
+}
+
+### Deleting Blog
+DELETE http://localhost:3003/api/blogs/here_blog_id
+Authorization: token_which_user_get_when_they_login
+
+
+
+

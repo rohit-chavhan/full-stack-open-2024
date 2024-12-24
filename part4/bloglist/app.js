@@ -4,22 +4,24 @@ const app = express()
 
 const cors = require('cors')
 const mongoose = require('mongoose')
+const usersRouter = require('./controllers/users')
 const blogsRouter = require('./controllers/blog')
+const loginRouter = require('./controllers/login')
+const middleware = require('./utils/middleware')
 
 app.use(express.json())
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 app.use(cors())
 
 const mongoUrl = MONGODB_URI
-mongoose.connect(mongoUrl)
+mongoose
+  .connect(mongoUrl)
+  .then(() => console.log('connect to mongo db'))
+  .catch((err) => console.log(err))
 
-const errorHandler = (err, req, res, next) => {
-  if (err.name === 'ValidationError') {
-    return res.status(400).end()
-  }
-  return next(err)
-}
-
-app.use(errorHandler)
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app
