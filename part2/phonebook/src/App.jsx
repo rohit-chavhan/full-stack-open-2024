@@ -14,6 +14,7 @@ const App = () => {
 
   const hook = () => {
     backendCalls.getAll().then((data) => {
+      console.log('data ==> ', data)
       return setPersons(data)
     })
   }

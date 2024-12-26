@@ -1,6 +1,9 @@
 ### Get All Users
 GET  http://localhost:3003/api/users
 
+###
+GET  http://localhost:3003/api/blogs
+
 ### Adding New User
 POST http://localhost:3003/api/users
 Content-Type: application/json

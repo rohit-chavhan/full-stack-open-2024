@@ -13,6 +13,7 @@ const App = () => {
 
     try {
       const userToken = await blogService.loginUser({ username, password })
+      window.localStorage.setItem('token', JSON.stringify(userToken))
       setUser(userToken)
       setUsername('')
       setPassword('')
@@ -23,6 +24,8 @@ const App = () => {
       }, 5000)
     }
   }
+
+  const logOut = () => window.localStorage.removeItem('token')
 
   useEffect(() => {
     blogService.getBlogs().then((blogRay) => setBlogs(blogRay))
@@ -58,7 +61,9 @@ const App = () => {
       ) : (
         <div>
           <h1>Blog</h1>
-          <h3>{user.username} logged in</h3>
+          <h3>
+            {user.username} logged in <button onClick={logOut}>logout</button>
+          </h3>
           {blogs.map((blog) => {
             return <Blog key={blog.id} blog={blog} />
           })}
