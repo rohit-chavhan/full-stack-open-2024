@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notify from './components/Notify'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -8,32 +9,41 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
+  const [notify, setNotify] = useState(null)
 
   const loginUser = async (event) => {
     event.preventDefault()
 
     try {
       const userToken = await blogService.loginUser({ username, password })
+      console.log('userToken ==> ', userToken)
       window.localStorage.setItem('token', JSON.stringify(userToken))
       setUser(userToken)
       setUsername('')
       setPassword('')
     } catch (err) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      setNotify('wrong username or password')
+      notifyTimer()
     }
+  }
+
+  const notifyTimer = () => {
+    setTimeout(() => {
+      setNotify(null)
+    }, 4000)
   }
 
   const addBlog = async (event) => {
     event.preventDefault()
 
+    console.log('user ==> ', user)
     let parsedToken = JSON.parse(user)
     blogService.setToken(parsedToken.token)
     const res = await blogService.addBlog(newBlog)
     let addingNewBlog = blogs
     setBlogs(addingNewBlog.concat(res))
+    setNotify(newBlog)
+    notifyTimer()
   }
 
   const updateForm = (event) => {
@@ -64,6 +74,7 @@ const App = () => {
 
   return (
     <div>
+      <Notify value={notify} />
       {user === null ? (
         <div>
           <h1>log in to application</h1>
