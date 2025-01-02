@@ -10,6 +10,22 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
   const [notify, setNotify] = useState(null)
+  const [displayAddBlog, setDisplayAddBlog] = useState(false)
+
+  useEffect(() => {
+    const browserCred = window.localStorage.getItem('token')
+    if (browserCred) {
+      setUser(browserCred)
+    }
+  }, [])
+
+  const gettingBlogs = () => {
+    blogService.getBlogs().then((blogRay) => {
+      setBlogs(blogRay)
+    })
+  }
+
+  useEffect(gettingBlogs, [])
 
   const loginUser = async (event) => {
     event.preventDefault()
@@ -57,20 +73,56 @@ const App = () => {
     setUser(null)
   }
 
-  const gettingBlogs = () => {
-    blogService.getBlogs().then((blogRay) => {
-      setBlogs(blogRay)
-    })
+  const newBlogForm = () => {
+    let hideForm = { display: displayAddBlog ? '' : 'none' }
+    let showForm = { display: displayAddBlog ? 'none' : '' }
+
+    const hideFormClick = () => setDisplayAddBlog(false)
+
+    return (
+      <div>
+        <div style={showForm}>
+          <button onClick={() => setDisplayAddBlog(true)}>new blog</button>
+        </div>
+        <div style={hideForm}>
+          <h2>create new</h2>
+          <form onSubmit={addBlog}>
+            <div>
+              title:
+              <input
+                type='text'
+                name='title'
+                value={newBlog.title}
+                onChange={updateForm}
+              />
+            </div>
+            <div>
+              author:
+              <input
+                type='text'
+                name='author'
+                value={newBlog.author}
+                onChange={updateForm}
+              />
+            </div>
+            <div>
+              url:
+              <input
+                type='text'
+                name='url'
+                value={newBlog.url}
+                onChange={updateForm}
+              />
+            </div>
+            <button type='submit' onClick={hideFormClick}>
+              create
+            </button>
+            <button onClick={hideFormClick}>cancel</button>
+          </form>
+        </div>
+      </div>
+    )
   }
-
-  useEffect(gettingBlogs, [])
-
-  useEffect(() => {
-    const browserCred = window.localStorage.getItem('token')
-    if (browserCred) {
-      setUser(browserCred)
-    }
-  }, [])
 
   return (
     <div>
@@ -102,41 +154,13 @@ const App = () => {
         </div>
       ) : (
         <div>
+          {console.log('user ==> ', JSON.parse(user))}
           <h1>Blog</h1>
           <h3>
-            {user.username} logged in <button onClick={logOut}>logout</button>
+            {JSON.parse(user).username} logged in{' '}
+            <button onClick={logOut}>logout</button>
           </h3>
-          <h2>create new</h2>
-          <form onSubmit={addBlog}>
-            <div>
-              title:
-              <input
-                type='text'
-                name='title'
-                value={newBlog.title}
-                onChange={updateForm}
-              />
-            </div>
-            <div>
-              author:
-              <input
-                type='text'
-                name='author'
-                value={newBlog.author}
-                onChange={updateForm}
-              />
-            </div>
-            <div>
-              url:
-              <input
-                type='text'
-                name='url'
-                value={newBlog.url}
-                onChange={updateForm}
-              />
-            </div>
-            <button type='submit'>create</button>
-          </form>
+          {newBlogForm()}
           {blogs.map((blog) => {
             return <Blog key={blog.id} blog={blog} />
           })}
