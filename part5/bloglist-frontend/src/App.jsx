@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notify from './components/Notify'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
+import Input from './components/Input'
 
 const App = () => {
   const [username, setUsername] = useState([])
   const [password, setPassword] = useState([])
-  const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
+
+  const [user, setUser] = useState(null)
   const [notify, setNotify] = useState(null)
-  const [displayAddBlog, setDisplayAddBlog] = useState(false)
 
   useEffect(() => {
     const browserCred = window.localStorage.getItem('token')
@@ -49,79 +50,24 @@ const App = () => {
     }, 4000)
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-
-    console.log('user ==> ', user)
-    let parsedToken = JSON.parse(user)
-    blogService.setToken(parsedToken.token)
-    const res = await blogService.addBlog(newBlog)
-    let addingNewBlog = blogs
-    setBlogs(addingNewBlog.concat(res))
-    setNotify(newBlog)
-    notifyTimer()
-  }
-
-  const updateForm = (event) => {
-    event.preventDefault()
-    const target = event.target
-    setNewBlog({ ...newBlog, [target.name]: target.value })
-  }
-
   const logOut = () => {
     window.localStorage.removeItem('token')
     setUser(null)
   }
 
-  const newBlogForm = () => {
-    let hideForm = { display: displayAddBlog ? '' : 'none' }
-    let showForm = { display: displayAddBlog ? 'none' : '' }
+  const addBlog = async (newBlog) => {
+    console.log('newBlog ==> ', newBlog)
+    console.log('hey u ran me')
+    let parsedToken = JSON.parse(user)
+    blogService.setToken(parsedToken.token)
 
-    const hideFormClick = () => setDisplayAddBlog(false)
+    console.log('blogService ==> ', blogService)
+    const res = await blogService.addBlog(newBlog)
+    let addingNewBlog = blogs
 
-    return (
-      <div>
-        <div style={showForm}>
-          <button onClick={() => setDisplayAddBlog(true)}>new blog</button>
-        </div>
-        <div style={hideForm}>
-          <h2>create new</h2>
-          <form onSubmit={addBlog}>
-            <div>
-              title:
-              <input
-                type='text'
-                name='title'
-                value={newBlog.title}
-                onChange={updateForm}
-              />
-            </div>
-            <div>
-              author:
-              <input
-                type='text'
-                name='author'
-                value={newBlog.author}
-                onChange={updateForm}
-              />
-            </div>
-            <div>
-              url:
-              <input
-                type='text'
-                name='url'
-                value={newBlog.url}
-                onChange={updateForm}
-              />
-            </div>
-            <button type='submit' onClick={hideFormClick}>
-              create
-            </button>
-            <button onClick={hideFormClick}>cancel</button>
-          </form>
-        </div>
-      </div>
-    )
+    setBlogs(addingNewBlog.concat(res))
+    setNotify(newBlog)
+    notifyTimer()
   }
 
   return (
@@ -133,20 +79,18 @@ const App = () => {
           <form onSubmit={loginUser}>
             <div>
               username
-              <input
-                type='text'
+              <Input
+                title={'Username'}
                 value={username}
-                name='Username'
-                onChange={({ target }) => setUsername(target.value)}
+                update={({ target }) => setUsername(target.value)}
               />
             </div>
             <div>
               password
-              <input
-                type='password'
+              <Input
+                title={'Password'}
                 value={password}
-                name={'Password'}
-                onChange={({ target }) => setPassword(target.value)}
+                update={({ target }) => setPassword(target.value)}
               />
             </div>
             <button type='submit'>login</button>
@@ -160,7 +104,7 @@ const App = () => {
             {JSON.parse(user).username} logged in{' '}
             <button onClick={logOut}>logout</button>
           </h3>
-          {newBlogForm()}
+          <BlogForm addBlog={addBlog} />
           {blogs.map((blog) => {
             return <Blog key={blog.id} blog={blog} />
           })}
