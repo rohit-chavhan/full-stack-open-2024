@@ -67,6 +67,12 @@ const App = () => {
     notifyTimer()
   }
 
+  const sortBlogs = () => {
+    let newBlog = [...blogs].sort((a, b) => b.likes - a.likes)
+    setBlogs(newBlog)
+    blogRays(blogs)
+  }
+
   return (
     <div>
       <Notify value={notify} />
@@ -101,6 +107,7 @@ const App = () => {
             <button onClick={logOut}>logout</button>
           </h3>
           <BlogForm addBlog={addBlog} />
+          <button onClick={sortBlogs}>sort</button>
           {blogs.map((blog) => {
             return (
               <Blog
