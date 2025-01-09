@@ -106,6 +106,7 @@ const App = () => {
           </h3>
           <BlogForm addBlog={addBlog} />
           {blogs.map((blog) => {
+            console.log('blog ==> ', blog)
             return <Blog key={blog.id} blog={blog} />
           })}
         </div>
