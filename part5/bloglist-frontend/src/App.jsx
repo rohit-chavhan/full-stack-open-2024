@@ -56,12 +56,9 @@ const App = () => {
   }
 
   const addBlog = async (newBlog) => {
-    console.log('newBlog ==> ', newBlog)
-    console.log('hey u ran me')
     let parsedToken = JSON.parse(user)
     blogService.setToken(parsedToken.token)
 
-    console.log('blogService ==> ', blogService)
     const res = await blogService.addBlog(newBlog)
     let addingNewBlog = blogs
 
@@ -98,7 +95,6 @@ const App = () => {
         </div>
       ) : (
         <div>
-          {console.log('user ==> ', JSON.parse(user))}
           <h1>Blog</h1>
           <h3>
             {JSON.parse(user).username} logged in{' '}
@@ -106,8 +102,14 @@ const App = () => {
           </h3>
           <BlogForm addBlog={addBlog} />
           {blogs.map((blog) => {
-            console.log('blog ==> ', blog)
-            return <Blog key={blog.id} blog={blog} />
+            return (
+              <Blog
+                key={blog.id}
+                id={blog.id}
+                blog={blog}
+                updateLikes={blogService.updateBlog}
+              />
+            )
           })}
         </div>
       )}

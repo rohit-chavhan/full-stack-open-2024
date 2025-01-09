@@ -29,4 +29,10 @@ const addBlog = async (newObj) => {
   return response.data
 }
 
-export default { getBlogs, getUser, loginUser, setToken, addBlog }
+const updateBlog = async (newObj, id) => {
+  console.log('newObj, id ==> ', newObj, id)
+  const response = await axios.put(`/api/blogs/${id}`, newObj)
+  return response.data
+}
+
+export default { getBlogs, getUser, loginUser, setToken, addBlog, updateBlog }

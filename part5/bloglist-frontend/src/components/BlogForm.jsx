@@ -13,6 +13,15 @@ const BlogForm = ({ addBlog }) => {
     setDisplayAddBlog(false)
   }
 
+  const visibleTrue = () => {
+    setDisplayAddBlog(true)
+  }
+
+  const cancelButtonToStop = (event) => {
+    event.preventDefault()
+    hideFormClick()
+  }
+
   const updateForm = (event) => {
     event.preventDefault()
     const target = event.target
@@ -22,7 +31,7 @@ const BlogForm = ({ addBlog }) => {
   return (
     <div>
       <div style={showForm}>
-        <button onClick={() => setDisplayAddBlog(true)}>new blog</button>
+        <button onClick={visibleTrue}>new blog</button>
       </div>
       <div style={hideForm}>
         <h2>create new</h2>
@@ -48,7 +57,7 @@ const BlogForm = ({ addBlog }) => {
           <button type='submit' onClick={hideFormClick}>
             create
           </button>
-          <button onClick={hideFormClick}>cancel</button>
+          <button onClick={cancelButtonToStop}>cancel</button>
         </form>
       </div>
     </div>
