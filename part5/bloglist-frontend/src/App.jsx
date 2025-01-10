@@ -57,6 +57,7 @@ const App = () => {
 
   const addBlog = async (newBlog) => {
     let parsedToken = JSON.parse(user)
+    console.log('parsedToken.token ==> ', parsedToken.token)
     blogService.setToken(parsedToken.token)
 
     const res = await blogService.addBlog(newBlog)
@@ -65,6 +66,12 @@ const App = () => {
     setBlogs(addingNewBlog.concat(res))
     setNotify(newBlog)
     notifyTimer()
+  }
+
+  const deleteBlogIt = (id) => {
+    let parsedToken = JSON.parse(user)
+    blogService.setToken(parsedToken.token)
+    blogService.deleteBlog(id)
   }
 
   const sortBlogs = () => {
@@ -115,6 +122,7 @@ const App = () => {
                 id={blog.id}
                 blog={blog}
                 updateLikes={blogService.updateBlog}
+                deleteBlog={deleteBlogIt}
               />
             )
           })}
