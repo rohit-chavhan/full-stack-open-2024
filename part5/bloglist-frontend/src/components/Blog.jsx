@@ -1,6 +1,14 @@
+import PropTypes from 'prop-types'
 import { useState } from 'react'
 
 const Blog = ({ id, blog, updateLikes, deleteBlog }) => {
+  console.log(
+    'id, blog, updateLikes, deleteBlog ==> ',
+    typeof id,
+    typeof blog,
+    typeof updateLikes,
+    typeof deleteBlog
+  )
   console.log('blog ==> ', blog)
   const [showDetails, setShowDetails] = useState(false)
   const [likes, incrementLikes] = useState(blog.likes)
@@ -36,11 +44,11 @@ const Blog = ({ id, blog, updateLikes, deleteBlog }) => {
     incrementLikes(blog.likes)
   }
 
-  const delteBlog = () => {
+  const promptUser = () => {
     let promptUser = confirm(`Remove blog ${blog.title} by ${blog.author}`)
 
     if (promptUser) {
-      deleteBlog(id)
+      deleteBlog(id, blog)
     }
   }
 
@@ -58,12 +66,19 @@ const Blog = ({ id, blog, updateLikes, deleteBlog }) => {
           likes {likes} <button onClick={updateLike}>like</button>
         </p>
         <p>{blog.user.name}</p>
-        <button style={btnStylus} onClick={delteBlog}>
+        <button style={btnStylus} onClick={promptUser}>
           remove
         </button>
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  id: PropTypes.string.isRequired,
+  blog: PropTypes.object.isRequired,
+  updateLikes: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired,
 }
 
 export default Blog

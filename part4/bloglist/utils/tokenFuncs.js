@@ -13,11 +13,11 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
-const userExtractor = async (request, response, next) => {
+const userExtractor = (request, response, next) => {
   if (!request.token) {
     request.user = null
   } else {
-    const decode = await jwt.verify(request.token, process.env.SECRET)
+    const decode = jwt.verify(request.token, process.env.SECRET)
     request.user = decode
   }
   next()
