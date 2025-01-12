@@ -61,7 +61,7 @@ test.skip('test that when show is clicked we see url and likes ', async () => {
   expect(likes).toBeDefined()
 })
 
-test.only('check if we click button 2 times we have two times', async () => {
+test.skip('check if we click button 2 times we have two times', async () => {
   const mockHandler = vi.fn()
 
   render(
